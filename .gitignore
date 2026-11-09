@@ -218,3 +218,7 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local data (re-downloaded by analysis.py) and macOS files
+data/
+.DS_Store
