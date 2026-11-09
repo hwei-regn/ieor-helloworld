@@ -1,0 +1,50 @@
+name: Run analysis
+
+on:
+  workflow_dispatch:
+    inputs:
+      refresh_data:
+        description: "Re-download the data from NYC Open Data instead of using the copy in the repo"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-python@v7
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - run: pip install -r requirements.txt
+
+      - name: Drop bundled data to force a fresh download
+        if: ${{ inputs.refresh_data }}
+        run: rm -f data/morningside_heights_raw.csv
+
+      - name: Run analysis.py
+        shell: bash
+        run: |
+          python analysis.py | tee report.txt
+          {
+            echo '## Morningside Heights street trees'
+            echo '```text'
+            cat report.txt
+            echo '```'
+            echo 'The chart is in the **Artifacts** section below.'
+          } >> "$GITHUB_STEP_SUMMARY"
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: morningside-trees-results
+          path: |
+            morningside_top_species.png
+            report.txt
+          if-no-files-found: error

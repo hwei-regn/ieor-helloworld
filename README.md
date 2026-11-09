@@ -6,6 +6,16 @@ This repo holds the complete output of a single prompt given to Claude Code: a s
 
 ![Top 5 street tree species in Morningside Heights, with count and share in Good health](morningside_top_species.png)
 
+## Run it on demand
+
+The analysis can be run on GitHub's servers from the **Actions** tab, with nothing to install:
+
+1. Open the [**Run analysis** workflow](https://github.com/hwei-regn/ieor-helloworld/actions/workflows/run-analysis.yml).
+2. Click **Run workflow**. Leave "Re-download the data from NYC Open Data" unticked to use the copy in this repo, or tick it to pull the data fresh from the API.
+3. After about a minute, open the new run. The full report is on the run's summary page, and the chart plus `report.txt` are under **Artifacts** as `morningside-trees-results`.
+
+GitHub only shows the **Run workflow** button to people with write access to the repo. Everyone else can fork this repo, enable Actions in the fork (Actions tab), and run the same workflow there, or [run the script locally](#reproduce-it).
+
 ## The original prompt
 
 Everything in this repo was produced from this prompt, given verbatim:
@@ -68,13 +78,15 @@ Dropping the 193 rows south of 110th Street swaps honeylocust and ginkgo at the 
 | [`findings.md`](findings.md) | The 5-sentence summary |
 | [`morningside_top_species.png`](morningside_top_species.png) | The chart shown above |
 | [`data/morningside_heights_raw.csv`](data/morningside_heights_raw.csv) | The 2,751-row extract from the Socrata API (45 columns), fetched 2026-11-09 |
+| [`requirements.txt`](requirements.txt) | Python dependencies (`pandas`, `matplotlib`) |
+| [`.github/workflows/run-analysis.yml`](.github/workflows/run-analysis.yml) | The on-demand GitHub Actions workflow described above |
 
 ## Reproduce it
 
 Requires Python 3 with `pandas` and `matplotlib` (developed on Python 3.9, pandas 2.3, matplotlib 3.9).
 
 ```bash
-pip install pandas matplotlib
+pip install -r requirements.txt
 python3 analysis.py
 ```
 
